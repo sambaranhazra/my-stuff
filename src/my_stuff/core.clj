@@ -63,3 +63,71 @@
 (defn my-some
   [fn? seq]
   (reduce #(if (fn? %2) true) [] seq))
+(def food-journal
+  [{:month 1 :day 1 :foods ["apple" "pear" "chicken"]}
+   {:month 1 :day 2 :foods ["apple" "pear" "chicken"]}
+   {:month 1 :day 3 :foods ["apple" "pear" "chicken"]}
+   {:month 2 :day 1 :foods ["apple" "pear" "chicken"]} 
+   {:month 2 :day 2 :foods ["apple" "pear" "chicken"]}
+   {:month 2 :day 3 :foods ["apple" "pear" "chicken"]}
+   {:month 3 :day 1 :foods ["apple" "pear" "chicken"]}
+   {:month 3 :day 2 :foods ["apple" "pear" "chicken"]}
+   {:month 4 :day 1 :foods ["apple" "pear" "chicken"]}
+   {:month 4 :day 2 :foods ["apple" "pear" "chicken"]}
+   ])
+(take-while #(< (count (:foods %) ) 2) food-journal)
+
+(def vampire-database
+  {0 {:makes-blood-puns? false, :has-pulse? true :name "McFishwich"}
+   1 {:makes-blood-puns? false, :has-pulse? true :name "McMackson"}
+   2 {:makes-blood-puns? true, :has-pulse? false :name "Damon Salvatore"}
+   3 {:makes-blood-puns? true, :has-pulse? true :name "Mickey Mouse"}})
+
+(defn vampire-related-details
+  [social-security-number]
+  ;(Thread/sleep 1000)
+  (get vampire-database social-security-number))
+
+(defn vampire?
+  [record]
+  (and (:makes-blood-puns? record)
+       (not (:has-pulse? record)) record))
+
+(defn identify-vampire
+  [social-security-numbers]
+  (first (filter vampire? 
+                 (map vampire-related-details social-security-numbers))))
+(def not-vampire? (complement vampire?))
+(defn identify-humans
+  [social-security-numbers]
+  (filter not-vampire?
+          (map vampire-related-details social-security-numbers)))
+
+(def file-name "resources/suspects.csv")
+(def vamp-keys [:name :glitter-index])
+(defn str->int
+  [str]
+  (Integer. str))
+(def conversions 
+  {:name identity :glitter-index str->int})
+(defn convert
+  [vamp-key value]
+  ((get conversions vamp-key) value))
+
+(defn parse
+  [string]
+  (map #(clojure.string/split % #",")
+       (clojure.string/split string #"\r\n")))
+(defn mapify
+  [rows]
+  (map (fn [unmapped-row]
+         (reduce (fn [row-map [vamp-key value]]
+                   (assoc row-map vamp-key (convert vamp-key value)))
+                 {}
+                 (map vector vamp-keys unmapped-row)))
+       rows))
+
+(defn glitter-filter
+  [minimum-glitter records]
+  (map #(:name %) (filter #(>= (:glitter-index %) minimum-glitter) records)))
+
