@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"], [proto-repl "0.3.1"]]
-  :main ^:skip-aot my-stuff.core
-  :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :plugins [[nightlight/lein-nightlight "2.3.2"]]
+  :dependencies [[org.clojure/clojure "1.9.0"] [proto-repl "0.3.1"]]
+  :repl-options {:init (do (use 'my-stuff.core))
+                 :skip-default-init true}
+  :main my-stuff.core)

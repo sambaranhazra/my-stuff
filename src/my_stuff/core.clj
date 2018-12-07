@@ -2,10 +2,7 @@
 (ns my-stuff.core
   (:gen-class))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+
 
 (defn number-comment
   [x]
@@ -67,15 +64,15 @@
   [{:month 1 :day 1 :foods ["apple" "pear" "chicken"]}
    {:month 1 :day 2 :foods ["apple" "pear" "chicken"]}
    {:month 1 :day 3 :foods ["apple" "pear" "chicken"]}
-   {:month 2 :day 1 :foods ["apple" "pear" "chicken"]} 
+   {:month 2 :day 1 :foods ["apple" "pear" "chicken"]}
    {:month 2 :day 2 :foods ["apple" "pear" "chicken"]}
    {:month 2 :day 3 :foods ["apple" "pear" "chicken"]}
    {:month 3 :day 1 :foods ["apple" "pear" "chicken"]}
    {:month 3 :day 2 :foods ["apple" "pear" "chicken"]}
    {:month 4 :day 1 :foods ["apple" "pear" "chicken"]}
-   {:month 4 :day 2 :foods ["apple" "pear" "chicken"]}
-   ])
-(take-while #(< (count (:foods %) ) 2) food-journal)
+   {:month 4 :day 2 :foods ["apple" "pear" "chicken"]}])
+
+(take-while #(< (count (:foods %)) 2) food-journal)
 
 (def vampire-database
   {0 {:makes-blood-puns? false, :has-pulse? true :name "McFishwich"}
@@ -95,7 +92,7 @@
 
 (defn identify-vampire
   [social-security-numbers]
-  (first (filter vampire? 
+  (first (filter vampire?
                  (map vampire-related-details social-security-numbers))))
 (def not-vampire? (complement vampire?))
 (defn identify-humans
@@ -108,7 +105,7 @@
 (defn str->int
   [str]
   (Integer. str))
-(def conversions 
+(def conversions
   {:name identity :glitter-index str->int})
 (defn convert
   [vamp-key value]
@@ -131,3 +128,39 @@
   [minimum-glitter records]
   (map #(:name %) (filter #(>= (:glitter-index %) minimum-glitter) records)))
 
+(defn fibo
+  [number] (loop [num number a 1N b 1N]
+             (cond
+               (<= num 1) a
+               (<= num 2) b
+               :else (recur (dec num) b (+ a b)))))
+
+(defn factorial [number]
+  (loop [num number fact 1N]
+    (if (< num 1N) fact (recur (dec num) (* fact num)))))
+
+
+(defn change [amount]
+  (loop [amt (* amount 100) one 0 ten 0 twenty-five 0 fifty 0 hundred 0]
+    (if (>= amt 100)
+      (recur (- amt 100) one ten twenty-five fifty (inc hundred))
+      (do
+        (if (>= amt 50)
+          (recur (- amt 50) one ten twenty-five (inc fifty) hundred)
+          (do
+            (if (>= amt 25)
+              (recur (- amt 25) one ten (inc twenty-five) fifty hundred)
+              (do
+                (if (>= amt 10)
+                  (recur (- amt 10) one (inc ten) twenty-five fifty hundred)
+                  (do
+                    (if (>= amt 1)
+                      (recur (- amt 1) (inc one) ten twenty-five fifty hundred)
+                      {:one one :ten ten :twenty-five twenty-five :fifty fifty :hundred hundred})))))))))))
+
+(defn -main
+  "I don't do a whole lot ... yet."
+  [num]
+  (println "hello world")
+  (println (new BigDecimal num))
+  (println (change (new BigDecimal num))))
