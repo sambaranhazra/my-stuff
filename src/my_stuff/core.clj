@@ -75,10 +75,10 @@
 (take-while #(< (count (:foods %)) 2) food-journal)
 
 (def vampire-database
-  {0 {:makes-blood-puns? false, :has-pulse? true :name "McFishwich"}
-   1 {:makes-blood-puns? false, :has-pulse? true :name "McMackson"}
-   2 {:makes-blood-puns? true, :has-pulse? false :name "Damon Salvatore"}
-   3 {:makes-blood-puns? true, :has-pulse? true :name "Mickey Mouse"}})
+  {:0 {:makes-blood-puns? false, :has-pulse? true :name "McFishwich"}
+   :1 {:makes-blood-puns? false, :has-pulse? true :name "McMackson"}
+   :2 {:makes-blood-puns? true, :has-pulse? false :name "Damon Salvatore"}
+   :3 {:makes-blood-puns? true, :has-pulse? true :name "Mickey Mouse"}})
 
 (defn vampire-related-details
   [social-security-number]
@@ -142,22 +142,25 @@
 
 (defn change [amount]
   (loop [amt (* amount 100) one 0 ten 0 twenty-five 0 fifty 0 hundred 0]
-    (if (>= amt 100)
-      (recur (- amt 100) one ten twenty-five fifty (inc hundred))
-      (do
-        (if (>= amt 50)
-          (recur (- amt 50) one ten twenty-five (inc fifty) hundred)
-          (do
-            (if (>= amt 25)
-              (recur (- amt 25) one ten (inc twenty-five) fifty hundred)
-              (do
-                (if (>= amt 10)
-                  (recur (- amt 10) one (inc ten) twenty-five fifty hundred)
-                  (do
-                    (if (>= amt 1)
-                      (recur (- amt 1) (inc one) ten twenty-five fifty hundred)
-                      {:one one :ten ten :twenty-five twenty-five :fifty fifty :hundred hundred})))))))))))
+    (cond
+       (>= amt 100)
+       (recur (- amt 100) one ten twenty-five fifty (inc hundred))
+       (>= amt 50)
+       (recur (- amt 50) one ten twenty-five (inc fifty) hundred)
+       (>= amt 25)
+       (recur (- amt 25) one ten (inc twenty-five) fifty hundred)
+       (>= amt 10)
+       (recur (- amt 10) one (inc ten) twenty-five fifty hundred)
+       (>= amt 1)
+       (recur (- amt 1) (inc one) ten twenty-five fifty hundred)
+       :else
+       {:one one :ten ten :twenty-five twenty-five :fifty fifty :hundred hundred})))
 
+(defn gcd [first second]
+  (loop [x first y second]
+    (if (= y 0)
+      x
+      (recur y (mod x y)))))
 (defn -main
   "I don't do a whole lot ... yet."
   [num]
