@@ -2,8 +2,6 @@
 (ns my-stuff.core
   (:gen-class))
 
-
-
 (defn number-comment
   [x]
   (if (> x 6)
@@ -16,8 +14,7 @@
                              {:name "left-hand" :size 2}
                              {:name "left-leg" :size 3}])
 
-(defn matching-part
-  [part]
+(defn matching-part [part]
   {:name (clojure.string/replace (:name part) #"^left-" "right-")
    :size (:size part)})
 
@@ -139,28 +136,33 @@
   (loop [num number fact 1N]
     (if (< num 1N) fact (recur (dec num) (* fact num)))))
 
-
 (defn change [amount]
   (loop [amt (* amount 100) one 0 ten 0 twenty-five 0 fifty 0 hundred 0]
     (cond
-       (>= amt 100)
-       (recur (- amt 100) one ten twenty-five fifty (inc hundred))
-       (>= amt 50)
-       (recur (- amt 50) one ten twenty-five (inc fifty) hundred)
-       (>= amt 25)
-       (recur (- amt 25) one ten (inc twenty-five) fifty hundred)
-       (>= amt 10)
-       (recur (- amt 10) one (inc ten) twenty-five fifty hundred)
-       (>= amt 1)
-       (recur (- amt 1) (inc one) ten twenty-five fifty hundred)
-       :else
-       {:one one :ten ten :twenty-five twenty-five :fifty fifty :hundred hundred})))
+      (>= amt 100)
+      (recur (- amt 100) one ten twenty-five fifty (inc hundred))
+      (>= amt 50)
+      (recur (- amt 50) one ten twenty-five (inc fifty) hundred)
+      (>= amt 25)
+      (recur (- amt 25) one ten (inc twenty-five) fifty hundred)
+      (>= amt 10)
+      (recur (- amt 10) one (inc ten) twenty-five fifty hundred)
+      (>= amt 1)
+      (recur (- amt 1) (inc one) ten twenty-five fifty hundred)
+      :else
+      {:one one :ten ten :twenty-five twenty-five :fifty fifty :hundred hundred})))
 
 (defn gcd [first second]
   (loop [x first y second]
     (if (= y 0)
       x
       (recur y (mod x y)))))
+
+(defn sum-num [a b]
+  (loop [first a result 0N]
+    (if (> first b)
+      result
+      (recur (inc first) (+ result first)))))
 (defn -main
   "I don't do a whole lot ... yet."
   [num]
